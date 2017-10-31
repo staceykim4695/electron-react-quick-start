@@ -1,11 +1,9 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-/* This can check if your electron app can communicate with your backend */
-// fetch('http://localhost:3000')
-// .then(resp => resp.text())
-// .then(text => console.log(text))
-// .catch(err => {throw err})
+require('./css/main.css');
+import Main from './Main';
 
-ReactDOM.render(<p>React lives!</p>,
+ReactDOM.render(<MuiThemeProvider><Main /></MuiThemeProvider>,
    document.getElementById('root'));

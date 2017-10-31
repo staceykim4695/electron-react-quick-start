@@ -1,0 +1,20 @@
+h1 {
+  color: red;
+}
+
+.toolbar {
+  border-bottom: 2px solid gray;
+  padding: 10px;
+}
+
+.toolbar > * {
+  margin-right: 5px;
+}
+
+.center-align {
+  text-align: center;
+}
+
+.right-align {
+  text-align: right;
+}
