@@ -107,6 +107,7 @@ class RichEditor extends React.Component {
             handleKeyCommand={this.handleKeyCommand}
             onTab={this.onTab}
             readOnly={this.state.readOnly}
+
             spellCheck
           />
         </div>
