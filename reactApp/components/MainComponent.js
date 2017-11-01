@@ -12,6 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { CirclePicker } from 'react-color';
 import Popover from 'material-ui/Popover';
 import { Map } from 'immutable';
+import Register from './Register'
 const myBlockTypes = DefaultDraftBlockRenderMap.merge(new Map({
   center: {
     wrapper: <div className="center-align"/>
@@ -115,8 +116,9 @@ class Main extends React.Component {
     );
   }
 
-  applyIncreaseFontSize(shrink) {
-    var newFontSize = this.state.currentFontsize + (shrink ? -4 : 4);
+  applyIncreaseFontSize(e, shrink) {
+    e.preventDefault();
+    var newFontSize = this.state.currentFontSize + (shrink ? -4 : 4);
     var newInlineStyles = Object.assign(
       {},
       this.state.inlineStyles,
@@ -126,6 +128,7 @@ class Main extends React.Component {
         }
       }
     );
+    console.log(newInlineStyles, "styles");
     this.setState({
       inlineStyles: newInlineStyles,
       editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newFontSize)),
@@ -136,8 +139,8 @@ class Main extends React.Component {
   increaseFontSize(shrink) {
     return (
     <RaisedButton
-    backgroundColor={ colors.blue200 }
-      onMouseDown={() =>this.applyIncreaseFontSize(shrink)}
+    backgroundColor={colors.blue200}
+      onMouseDown={(e) => this.applyIncreaseFontSize(e, shrink)}
       icon={<FontIcon
         className="material-icons" color='white'>{shrink ? 'remove_circle' : 'add_box'}</FontIcon>}
     />
