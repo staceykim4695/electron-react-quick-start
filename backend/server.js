@@ -88,7 +88,8 @@ app.post('/docs', (req, res) => {
   const newDocument = new Document({
     title: req.body.title,
     owner: req.user._id,
-    collaborators: []
+    collaborators: [],
+    password: req.body.password,
   })
   newDocument.save((err, user) => {
     if(err) {
@@ -115,6 +116,27 @@ app.get('/getDocs', (req, res) => {
       res.json(docs)
   }
   })
+})
+
+app.get('/getDoc/:docid', (req, res) => {
+  Document.findById(req.params.docid, (err, doc) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(doc)
+    }
+  })
+})
+
+app.post('/saveDoc/:docid', (req, res) => {
+    Document.update({_id: req.params.docid}, { $set: {body: req.body.body}}, (err, result) => {
+      if (err) {
+        res.send({ success: false, error: err })
+      } else {
+        res.json({success: true, result: result})
+      }
+    }
+  )
 })
 
 app.listen(3000, function () {

@@ -5,7 +5,8 @@ import Register from './Register';
 import Main from './MainComponent';
 import Login from './Login'
 import Docs from './Docs'
-import { Router, HashRouter, Route, Switch} from 'react-router-dom';
+import ModalApp from './Modal'
+import { Router, HashRouter, Route, Switch } from 'react-router-dom';
 import { render } from 'react-dom'
 
 require('../css/main.css');
@@ -16,7 +17,7 @@ const Root = () =>
       <Route path='/' exact component={Register}/>
       <Route path='/login' component={Login} />
       <Route path='/docs' component={Docs} />
-      <Route path='/editor' component={Main} />
+      <Route path='/edit/:docid' component={Main} />
     </Switch>
       {/* other routes */}
   </HashRouter>

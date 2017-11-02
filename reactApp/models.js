@@ -28,6 +28,14 @@ var documentSchema = mongoose.Schema({
   collaborators: {
     type: Array,
     required: false
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  body: {
+    type: String,
+    required: true
   }
 });
 

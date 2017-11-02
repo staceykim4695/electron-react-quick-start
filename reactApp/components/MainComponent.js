@@ -3,7 +3,9 @@ import {
   Editor,
   EditorState,
   RichUtils,
-  DefaultDraftBlockRenderMap
+  DefaultDraftBlockRenderMap,
+  convertToRaw,
+  convertFromRaw
 } from 'draft-js';
 import { Link } from 'react-router-dom';
 import * as colors from 'material-ui/styles/colors';
@@ -14,6 +16,7 @@ import { CirclePicker } from 'react-color';
 import Popover from 'material-ui/Popover';
 import { Map } from 'immutable';
 import Register from './Register';
+import axios from 'axios';
 const myBlockTypes = DefaultDraftBlockRenderMap.merge(new Map({
   center: {
     wrapper: <div className="center-align"/>
@@ -29,6 +32,7 @@ class Main extends React.Component {
     this.state = {
       editorState: EditorState.createEmpty(),
       currentFontSize: 12,
+      title: '',
       inlineStyles: {}
     };
   }
@@ -148,11 +152,45 @@ class Main extends React.Component {
   );
   }
 
+  saveDoc() {
+    const contentState = this.state.editorState.getCurrentContent();
+    const inlineState = this.state.inlineStyles.getCurrentContent();
+    // console.log('contentState', contentState)
+    const rawContentState = convertToRaw(contentState);
+    // console.log('rawContentState', rawContentState)
+    const stringContent = JSON.stringify(rawContentState);
+    // console.log('stringContent', stringContent)
+
+    axios.post(`http://localhost:3000/saveDoc/${this.props.match.params.docid}`, {
+      body: stringContent,
+      inlineStyles: inlineState
+    })
+      .then((resp) => {
+        console.log(resp.data);
+      })
+    }
+
+  componentDidMount() {
+    axios.get(`http://localhost:3000/getDoc/${this.props.match.params.docid}`)
+      .then((resp) => {
+        const doc = resp.data;
+        const rawContentState = JSON.parse(doc.body);
+        const contentState = convertFromRaw(rawContentState);
+        const newEditorState = EditorState.createWithContent(contentState);
+
+        this.setState({
+          title: doc.title,
+          editorState: newEditorState
+        })
+      })
+    }
+
   render() {
     return (
       <div>
         <AppBar title="Horizon Docs" />
-        <Link to='/docs'>Doc Portal</Link>
+        <Link to='/docs'>Doc Portal</Link><br />
+        <button onClick={() => this.saveDoc()}>Save</button>
         <div className="toolbar">
           {this.formatButton({icon: 'format_bold', style: 'BOLD' })}
           {this.formatButton({icon: 'format_italic', style: 'ITALIC' })}
@@ -166,6 +204,8 @@ class Main extends React.Component {
           {this.increaseFontSize(false)}
           {this.increaseFontSize(true)}
         </div><br />
+        <h3>{this.state.title}</h3>
+        <h4>Shareable ID: {this.props.match.params.docid}</h4>
         <Editor
           ref="editor"
           blockRenderMap={myBlockTypes}
