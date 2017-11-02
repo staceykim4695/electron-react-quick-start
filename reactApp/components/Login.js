@@ -29,10 +29,17 @@ class Login extends React.Component {
     axios.post('http://localhost:3000/login', {
       username: this.state.username,
       password: this.state.password,
+    }, {
+      withCredentials: true
     })
+    // .then(response => {
+    //   return response.json()
+    // })
       .then((resp) => {
+        console.log('handlesubmit resp', resp)
         if(resp.data.success === true) {
           this.props.history.push('/docs');
+
         } else {
           console.log('no user')
           alert('Cannot find user')
@@ -50,8 +57,9 @@ class Login extends React.Component {
               <form action='/login' method='post'>
                   Username: <input name='username' type="text" value={this.state.username} onChange={this.handleChange} /><br />
                   Password: <input name='password' type="password" value={this.state.password} onChange={this.handleChange} /><br />
-                  <button onClick={this.handleSubmit.bind(this)}>Submit</button>
-              </form>
+                  <button onClick={this.handleSubmit.bind(this)}>Submit</button><br />
+              </form><br />
+              <Link to='/Register'>Register</Link>
             </div>
           </div>
         </div>

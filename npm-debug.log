@@ -7,8 +7,8 @@
 6 silly lifecycle electron-react-quick-start@1.0.0~predev: no script for predev, continuing
 7 info lifecycle electron-react-quick-start@1.0.0~dev: electron-react-quick-start@1.0.0
 8 verbose lifecycle electron-react-quick-start@1.0.0~dev: unsafe-perm in lifecycle true
-9 verbose lifecycle electron-react-quick-start@1.0.0~dev: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/staceykim/Desktop/horizons/ladydocs/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-10 verbose lifecycle electron-react-quick-start@1.0.0~dev: CWD: /Users/staceykim/Desktop/horizons/ladydocs
+9 verbose lifecycle electron-react-quick-start@1.0.0~dev: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/staceykim/Desktop/horizons/GoogleDocs/ladydocs/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+10 verbose lifecycle electron-react-quick-start@1.0.0~dev: CWD: /Users/staceykim/Desktop/horizons/GoogleDocs/ladydocs
 11 silly lifecycle electron-react-quick-start@1.0.0~dev: Args: [ '-c',
 11 silly lifecycle   'concurrently -k "npm run devWebpack" "npm run devApp" "npm run devServer"' ]
 12 silly lifecycle electron-react-quick-start@1.0.0~dev: Returned: code: 1  signal: null
@@ -24,7 +24,7 @@
 14 verbose stack     at maybeClose (internal/child_process.js:920:16)
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:230:5)
 15 verbose pkgid electron-react-quick-start@1.0.0
-16 verbose cwd /Users/staceykim/Desktop/horizons/ladydocs
+16 verbose cwd /Users/staceykim/Desktop/horizons/GoogleDocs/ladydocs
 17 error Darwin 14.5.0
 18 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "run" "dev"
 19 error node v6.11.3

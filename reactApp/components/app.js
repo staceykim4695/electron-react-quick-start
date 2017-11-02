@@ -16,6 +16,7 @@ const Root = () =>
       <Route path='/' exact component={Register}/>
       <Route path='/login' component={Login} />
       <Route path='/docs' component={Docs} />
+      <Route path='/editor' component={Main} />
     </Switch>
       {/* other routes */}
   </HashRouter>

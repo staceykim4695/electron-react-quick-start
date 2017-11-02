@@ -6,9 +6,11 @@ const bodyParser = require('body-parser')
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('../reactApp/models').User;
+const Document = require('../reactApp/models').Document;
 
 var session = require('express-session');
-app.use(session({ secret: 'secret'}))
+const MongoStore = require('connect-mongo')(session);
+
 
 app.use(express.static(path.join(__dirname, 'build')));
 
@@ -17,6 +19,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI)
+
+app.use(session({
+  secret: 'secret',
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection
+  })
+}));
 
 passport.serializeUser(function(user, done) {
   done(null, user._id);
@@ -52,11 +61,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.post('/login', passport.authenticate('local'), (req, res) => {
-  if(req.user) {
-    res.json({success: true})
-  } else {
-    res.json({success: false})
-  }
+  //if the passport authenticate doesn't respond, then it goes to (req, res); can have multiple (req, res) until one responds
+    res.json({success: true, user: req.user});
   //passport.authenticate
 })
 
@@ -70,10 +76,25 @@ app.post('/register', (req, res) => {
   })
   newUser.save((err, user) => {
     if(err) {
-      res.json({success: false})
+      res.json({success: false, error: err})
     } else {
       res.json({success: true})
-      console.log(newUser)
+    }
+  })
+})
+
+app.post('/docs', (req, res) => {
+  //make a new User and save it
+  const newDocument = new Document({
+    title: req.body.title,
+    owner: req.user._id,
+    collaborators: []
+  })
+  newDocument.save((err, user) => {
+    if(err) {
+      res.json({success: false, error: err})
+    } else {
+      res.json({success: true})
     }
   })
 })
@@ -86,15 +107,15 @@ app.use((req, res, next) => {
   }
 });
 
-// app.get('/getUsers', (req, res) => {
-//   User.find({}, (err, users) => {
-//     if (err) {
-//       res.send(err)
-//     } else {
-//       res.json(users)
-//   }
-//   })
-// })
+app.get('/getDocs', (req, res) => {
+  Document.find({owner: req.user._id}, (err, docs) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(docs)
+  }
+  })
+})
 
 app.listen(3000, function () {
   console.log('Backend server for Electron App running on port 3000!')

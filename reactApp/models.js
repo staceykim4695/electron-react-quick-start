@@ -15,6 +15,23 @@ var userSchema = mongoose.Schema({
   lastName: String
 });
 
+var documentSchema = mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  owner: {
+    type: String,
+    required: true
+  },
+  collaborators: {
+    type: Array,
+    required: false
+  }
+});
+
 module.exports = {
-  User: mongoose.model('User', userSchema)
+  User: mongoose.model('User', userSchema),
+  Document: mongoose.model('Document', documentSchema)
 };
