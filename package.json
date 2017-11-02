@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "body-parser": "^1.18.2",
+    "connect-mongo": "^2.0.0",
     "draft-js": "^0.10.4",
     "draft-js-alignment-plugin": "^2.0.0-beta1",
     "draft-js-custom-styles": "^1.3.1",

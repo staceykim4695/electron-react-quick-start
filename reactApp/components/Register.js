@@ -32,12 +32,15 @@ class Register extends React.Component {
       username: this.state.username,
       password: this.state.password,
       firstName: this.state.firstName,
-      lastName: this.state.lastName
+      lastName: this.state.lastName,
+    }, {
+      withCredentials: true
     })
       .then((resp) => {
         if(resp.data.success === true) {
           this.props.history.push('/login');
         } else {
+          console.log('error', resp.data.error)
           this.setState({
               username: '',
               password: '',
@@ -46,6 +49,7 @@ class Register extends React.Component {
           })
         }
       })
+      .catch((err) => console.log(err))
     }
 
   render() {
@@ -63,6 +67,7 @@ class Register extends React.Component {
                   <button onClick={this.handleSubmit.bind(this)}>Submit</button>
                     {/* <Route path='/login' component={Login} /> */}
               </form>
+              <Link to='/Login'>Login</Link>
             </div>
           </div>
         </div>

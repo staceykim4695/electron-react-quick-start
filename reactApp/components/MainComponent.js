@@ -5,6 +5,7 @@ import {
   RichUtils,
   DefaultDraftBlockRenderMap
 } from 'draft-js';
+import { Link } from 'react-router-dom';
 import * as colors from 'material-ui/styles/colors';
 import AppBar from 'material-ui/AppBar';
 import FontIcon from 'material-ui/FontIcon';
@@ -12,7 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { CirclePicker } from 'react-color';
 import Popover from 'material-ui/Popover';
 import { Map } from 'immutable';
-import Register from './Register'
+import Register from './Register';
 const myBlockTypes = DefaultDraftBlockRenderMap.merge(new Map({
   center: {
     wrapper: <div className="center-align"/>
@@ -151,6 +152,7 @@ class Main extends React.Component {
     return (
       <div>
         <AppBar title="Horizon Docs" />
+        <Link to='/docs'>Doc Portal</Link>
         <div className="toolbar">
           {this.formatButton({icon: 'format_bold', style: 'BOLD' })}
           {this.formatButton({icon: 'format_italic', style: 'ITALIC' })}
