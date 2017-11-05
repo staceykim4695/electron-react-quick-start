@@ -21,13 +21,26 @@ var documentSchema = mongoose.Schema({
     required: true,
     unique: true
   },
+  ownerid: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   owner: {
-    type: String,
-    required: true
+    type: String
   },
   collaborators: {
     type: Array,
     required: false
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  body: {
+    type: String
+  },
+  inlineStyles: {
+    type: Object
   }
 });
 

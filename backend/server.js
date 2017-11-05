@@ -87,14 +87,16 @@ app.post('/docs', (req, res) => {
   //make a new User and save it
   const newDocument = new Document({
     title: req.body.title,
-    owner: req.user._id,
-    collaborators: []
+    ownerid: req.user._id,
+    owner: req.user.username,
+    collaborators: req.body.collaborators,
+    password: req.body.password,
   })
-  newDocument.save((err, user) => {
+  newDocument.save((err, newDoc) => {
     if(err) {
       res.json({success: false, error: err})
     } else {
-      res.json({success: true})
+      res.json({success: true, doc: newDoc})
     }
   })
 })
@@ -108,7 +110,8 @@ app.use((req, res, next) => {
 });
 
 app.get('/getDocs', (req, res) => {
-  Document.find({owner: req.user._id}, (err, docs) => {
+  // Document.find({ownerid: req.user._id, collaborators: { $in: [req.user.username] }}, (err, docs) => {
+  Document.find({ $or: [{ownerid: req.user._id}, {collaborators: { $in: [req.user.username] }} ]}, (err, docs) => {
     if (err) {
       res.send(err)
     } else {
@@ -116,6 +119,104 @@ app.get('/getDocs', (req, res) => {
   }
   })
 })
+
+app.get('/getDoc/:docid', (req, res) => {
+  Document.findById(req.params.docid, (err, doc) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(doc)
+    }
+  })
+})
+
+// app.get('/searchDoc/:docid', (req, res) => {
+//   Document.findById(req.params.docid, (err, doc) => {
+//     if (err) {
+//       res.send(err)
+//     } else {
+//       res.json(doc)
+//     }
+//   })
+// })
+
+app.post('/saveDoc/:docid', (req, res) => {
+    Document.update({_id: req.params.docid}, { $set: {body: req.body.body, inlineStyles: req.body.inlineStyles} }, (err, result) => {
+      if (err) {
+        res.send({ success: false, error: err })
+      } else {
+        res.json({success: true, result: result})
+      }
+    }
+  )
+})
+
+app.post('/addCollab/:docid', (req, res) => {
+  User.find({username: req.body.username}, (err, result) => {
+    if(err) {
+      res.json({ success: false, error: err })
+    } else if (result.length === 0) {
+      res.json({ success: false, error: "No users found" })
+    } else {
+      Document.update({_id: req.params.docid}, { $addToSet: {collaborators: req.body.username }}, (err, result) => {
+        if (err) {
+          res.send({ success: false, error: err })
+        } else {
+          res.json({success: true, result: result})
+        }
+      })
+    }
+  })
+})
+
+app.post('/searchDoc/:docid', (req, res) => {
+  Document.findById(req.params.docid, (err, doc) => {
+      if (err) {
+        res.send(err)
+      } else if (doc === null) {
+        res.json({success: false})
+      } else if (req.body.password !== doc.password) {
+          res.json({success: false})
+      } else {
+        Document.update({_id: req.params.docid}, { $push: {collaborators: req.user.username }}, (err, result) => {
+            if (err) {
+              res.send({ success: false, error: err })
+            } else {
+              res.json({success: true, result: doc})
+            }
+          })
+        }
+      })
+    })
+
+  // Document.update({_id: req.params.docid}, { $push: {collaborators: req.body.username }}, (err, result) => {
+  //       if (err) {
+  //         res.send({ success: false, error: err })
+  //       } else {
+  //         res.json({success: true, result: result})
+  //       }
+  //     })
+  //   }
+  // })
+// })
+
+// app.post('/removeCollab/:docid', (req, res) => {
+//   User.find({username: req.body.username}, (err, result) => {
+//     if(err) {
+//       res.json({ success: false, error: err })
+//     } else if (result.length === 0) {
+//       res.json({ success: false, error: "No users found" })
+//     } else {
+//       Document.update({_id: req.params.docid}, { $pull: {collaborators: req.body.collaborator }}, (err, result) => {
+//         if (err) {
+//           res.send({ success: false, error: err })
+//         } else {
+//           res.json({success: true, result: result})
+//         }
+//       })
+//     }
+//   })
+// })
 
 app.listen(3000, function () {
   console.log('Backend server for Electron App running on port 3000!')
