@@ -20,6 +20,8 @@ class Docs extends React.Component {
 
     this.state = {
       docs: [],
+      docid: '',
+      docidpass: '',
       name: '',
       password: '',
       modalIsOpen: false
@@ -43,8 +45,17 @@ class Docs extends React.Component {
       })
     }
 
-    // addModal(event) {
-    // }
+    handleSearchChange(event) {
+      this.setState({
+        docid: event.target.value,
+      })
+    }
+
+    handleSearchPassChange(event) {
+      this.setState({
+        docidpass: event.target.value,
+      })
+    }
 
     addDocument() {
       console.log('merp')
@@ -59,12 +70,12 @@ class Docs extends React.Component {
         .then((respJson) => {
           if(respJson.data.success === true) {
             console.log('added document ')
-            var newDoc = {
-              name: this.state.name,
-              password: this.state.password
-            }
+            // var newDoc = {
+            //   name: this.state.name,
+            //   password: this.state.password
+            // }
             var docsCopy = this.state.docs.slice();
-            docsCopy.push(newDoc)
+            docsCopy.push(respJson.data.doc)
             this.setState({
               docs: docsCopy,
               name: '',
@@ -82,10 +93,34 @@ class Docs extends React.Component {
         .catch((err) => console.log(err))
       }
 
+  searchDoc() {
+    axios.post(`http://localhost:3000/searchDoc/${this.state.docid}`, {
+      password: this.state.docidpass
+    })
+      .then((resp) => {
+        var docsCopy = this.state.docs.slice();
+        console.log('result', resp.data.result)
+        docsCopy.push(resp.data.result)
+        if (resp.data.success === true) {
+          this.setState({
+            docs: docsCopy,
+            docid: '',
+            docidpass: ''
+          })
+        } else {
+          this.setState({
+            docid: '',
+            docidpass: ''
+          })
+        }
+      })
+    }
+
   componentDidMount() {
     axios.get('http://localhost:3000/getDocs')
       // .then(resp => resp.json()
       .then(docs => {
+        console.log(docs)
         this.setState({ docs: docs.data })
       })
       .catch(err => console.log(err));
@@ -102,15 +137,15 @@ class Docs extends React.Component {
 
   closeModal() {
     this.setState({modalIsOpen: false});
-    this.componentDidMount();
   }
 
   render() {
+    console.log(this.state.docs, 'docs');
     return (
       // <HashRouter>
         <div>
-            <h3>Documents Portal</h3>
-            <div>
+            <h2>Documents Portal</h2>
+              <div>
               <button onClick={this.openModal}>Create a New Document</button>
               <Modal
                 isOpen={this.state.modalIsOpen}
@@ -130,7 +165,7 @@ class Docs extends React.Component {
               </Modal>
             </div>
           <div><br />
-            My Documents
+            <h4>My Documents</h4>
             <ul>
               {this.state.docs.map(doc => (
                 <div key={doc._id}>
@@ -138,8 +173,12 @@ class Docs extends React.Component {
                 </div>))}
             </ul>
           </div>
-            <input type="text" />
-            <button>Add Shared Document</button><br />
+          <div>
+            <h4>Add a Document By Its ID</h4>
+            Document ID: <input type="text" onChange={(event) => this.handleSearchChange(event)} value={this.state.docid}/><br />
+            Document Password: <input type="password" onChange={(event) => this.handleSearchPassChange(event)} value={this.state.docidpass}/><br />
+            <button onClick={() => this.searchDoc()}>Add By Document ID</button><br /><br />
+          </div>
             <Link to='/Login'>Logout</Link>
         </div>
       // </HashRouter>

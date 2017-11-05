@@ -19,7 +19,6 @@ const Root = () =>
       <Route path='/docs' component={Docs} />
       <Route path='/edit/:docid' component={Main} />
     </Switch>
-      {/* other routes */}
   </HashRouter>
 
 ReactDOM.render(<MuiThemeProvider><Root /></MuiThemeProvider>,

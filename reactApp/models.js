@@ -21,9 +21,12 @@ var documentSchema = mongoose.Schema({
     required: true,
     unique: true
   },
+  ownerid: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   owner: {
-    type: String,
-    required: true
+    type: String
   },
   collaborators: {
     type: Array,
@@ -34,8 +37,10 @@ var documentSchema = mongoose.Schema({
     required: true
   },
   body: {
-    type: String,
-    required: true
+    type: String
+  },
+  inlineStyles: {
+    type: Object
   }
 });
 
